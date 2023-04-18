@@ -295,10 +295,12 @@ export class VideoOnDemand extends cdk.Stack {
       encryption: s3.BucketEncryption.S3_MANAGED,
       cors: [
         {
+          id: "id",
           allowedMethods: [s3.HttpMethods.GET],
           allowedOrigins: ['*'],
           allowedHeaders: ['*'],
-          maxAge: 3000
+          maxAge: 3000,
+          exposedHeaders: [],
         }
       ],
       versioned: false

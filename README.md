@@ -1,4 +1,11 @@
-# Video on Demand on AWS
+# Video on Demand on LocalStack
+
+This repo is a fork of https://github.com/aws-solutions/video-on-demand-on-aws with changes made to run against LocalStack.
+
+The list of changes can be found here: https://github.com/simonrw/video-on-demand-on-aws/compare/main...simonrw:video-on-demand-on-aws:ls-compat
+
+# Original README
+
 
 How to implement a video-on-demand workflow on AWS leveraging AWS Step Functions, AWS Elemental MediaConvert, and AWS Elemental MediaPackage.
 Source code for [Video on Demand on AWS](https://aws.amazon.com/solutions/video-on-demand-on-aws/) solution.

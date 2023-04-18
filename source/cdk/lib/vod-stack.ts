@@ -146,16 +146,7 @@ export class VideoOnDemand extends cdk.Stack {
         }
       }
     };
-    /**
-     * Mapping for sending anonymous metrics to AWS Solution Builders API
-     */
-    new cdk.CfnMapping(this, 'AnonymousData', { // NOSONAR
-      mapping: {
-        SendAnonymousData: {
-          Data: 'Yes'
-        }
-      }
-    });
+
     /**
      * Conditions
      */
@@ -2275,24 +2266,6 @@ export class VideoOnDemand extends cdk.Stack {
     });
 
     /**
-     * Custom Resource: Anonymouse Metric
-     */
-    new cdk.CustomResource(this, 'AnonymousMetric', { // NOSONAR
-      serviceToken: customResourceLambda.functionArn,
-      properties: {
-        Resource: 'AnonymousMetric',
-        SolutionId: solutionId,
-        UUID: uuid.getAttString('UUID'),
-        Version: '%%VERSION%%',
-        Transcoder: 'MediaConvert',
-        WorkflowTrigger: workflowTrigger.valueAsString,
-        Glacier: glacier.valueAsString,
-        FrameCapture: frameCapture.valueAsString,
-        EnableMediaPackage: enableMediaPackage.valueAsString
-      }
-    });
-
-    /**
      * AppRegistry
      */
     const applicationName = `video-on-demand-on-aws-${cdk.Aws.REGION}-${cdk.Aws.ACCOUNT_ID}-${cdk.Aws.STACK_NAME}`;
@@ -2342,11 +2315,6 @@ export class VideoOnDemand extends cdk.Stack {
       value: distribution.cloudFrontWebDistribution.domainName,
       description: 'CloudFront Domain Name',
       exportName: `${cdk.Aws.STACK_NAME}:CloudFront`
-    });
-    new cdk.CfnOutput(this, 'AnonymousMetricUUID', { // NOSONAR
-      value: uuid.getAttString('UUID'),
-      description: 'AnonymousMetric UUID',
-      exportName: `${cdk.Aws.STACK_NAME}:UUID`
     });
     new cdk.CfnOutput(this, 'SnsTopicName', { // NOSONAR
       value: snsTopic.topicName,

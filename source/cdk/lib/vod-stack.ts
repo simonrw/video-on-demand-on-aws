@@ -542,7 +542,7 @@ export class VideoOnDemand extends cdk.Stack {
     /**
      * Custom Resource: MediaConvert Templates
      */
-    const mediaConvertTemplates = new cdk.CustomResource(this, 'MediaConvertTemplates', { // NOSONAR
+    new cdk.CustomResource(this, 'MediaConvertTemplates', { // NOSONAR
       serviceToken: customResourceLambda.functionArn,
       properties: {
         Resource: 'MediaConvertTemplates',

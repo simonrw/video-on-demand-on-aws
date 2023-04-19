@@ -26,8 +26,31 @@ import * as tasks from 'aws-cdk-lib/aws-stepfunctions-tasks';
 import * as events from 'aws-cdk-lib/aws-events';
 import * as targets from 'aws-cdk-lib/aws-events-targets';
 import * as appreg from '@aws-cdk/aws-servicecatalogappregistry-alpha';
+import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { CloudFrontToS3 } from '@aws-solutions-constructs/aws-cloudfront-s3';
 import { NagSuppressions } from 'cdk-nag';
+
+interface ParameterProps {
+  parameterName: string,
+  exportName: string,
+  outputName: string;
+  value: string,
+}
+
+class Parameter extends Construct {
+  constructor(scope: Construct, id: string, props: ParameterProps) {
+    super(scope, id);
+    new cdk.CfnOutput(this, props.outputName, {
+      value: props.value,
+      exportName: props.exportName,
+    });
+
+    new ssm.StringParameter(this, `${props.outputName}Parameter`, {
+      parameterName: props.parameterName,
+      stringValue: props.value,
+    });
+  }
+}
 
 export class VideoOnDemand extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -2270,20 +2293,23 @@ export class VideoOnDemand extends cdk.Stack {
     /**
      * Outputs
      */
-    new cdk.CfnOutput(this, 'DynamoDBTableName', { // NOSONAR
+    new Parameter(this, 'DynamoDBTableParameter', {
+      parameterName: '/dynamodbTable',
+      exportName: `${cdk.Aws.STACK_NAME}:DynamoDBTable`,
+      outputName: 'DynamoDBTableName',
       value: dynamoDBTable.tableName,
-      description: 'DynamoDB Table',
-      exportName: `${cdk.Aws.STACK_NAME}:DynamoDBTable`
     });
-    new cdk.CfnOutput(this, 'SourceBucketName', { // NOSONAR
+    new Parameter(this, 'SourceBucketNameParameter', {
+      parameterName: '/sourceBucketName',
+      exportName: `${cdk.Aws.STACK_NAME}:Source`,
+      outputName: 'SourceBucketName',
       value: source.bucketName,
-      description: 'Source Bucket',
-      exportName: `${cdk.Aws.STACK_NAME}:Source`
     });
-    new cdk.CfnOutput(this, 'DestinationBucketName', { // NOSONAR
+    new Parameter(this, 'DestinationBucketNameParameter', {
+      parameterName: '/destinationBucketName',
+      exportName: `${cdk.Aws.STACK_NAME}:Destination`,
+      outputName: 'DestinationBucketName',
       value: destination.bucketName,
-      description: 'Destination Bucket',
-      exportName: `${cdk.Aws.STACK_NAME}:Destination`
     });
     new cdk.CfnOutput(this, 'CloudFrontDomainName', { // NOSONAR
       value: distribution.cloudFrontWebDistribution.domainName,

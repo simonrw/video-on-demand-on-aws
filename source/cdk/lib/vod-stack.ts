@@ -1935,9 +1935,9 @@ export class VideoOnDemand extends cdk.Stack {
         source: ['aws.mediaconvert'],
         detail: {
           status: ['COMPLETE'],
-          userMetadata: {
-            workflow: [cdk.Aws.STACK_NAME]
-          }
+          // userMetadata: {
+          //   workflow: [cdk.Aws.STACK_NAME]
+          // }
         }
       },
       targets: [new targets.LambdaFunction(stepFunctionsLambda)]

@@ -100,7 +100,7 @@ def parse_text_attributes(track):
 
 def get_signed_url(bucket, obj):
     SIGNED_URL_EXPIRATION = 60 * 60 * 2
-    AWS_REGION = os.environ['AWS_REGION']
+    AWS_REGION = os.getenv('AWS_DEFAULT_REGION') or "eu-central-1"
     ## PR: https://github.com/awslabs/video-on-demand-on-aws/pull/111
     boto_config = Config(
         region_name=AWS_REGION,
@@ -109,7 +109,7 @@ def get_signed_url(bucket, obj):
             'signature_version': 's3v4'
         }
     )
-    s3_client = boto3.client('s3', config=boto_config)
+    s3_client = boto3.client('s3', config=boto_config, endpoint_url=f"https://s3.{AWS_REGION}.amazonaws.com", region_name=AWS_REGION)
     return s3_client.generate_presigned_url(
         'get_object',
         Params={ 'Bucket': bucket, 'Key': obj },
